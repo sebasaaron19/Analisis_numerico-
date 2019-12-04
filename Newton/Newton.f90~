@@ -1,0 +1,54 @@
+program Newton
+  implicit none
+  Real::a,b,x,f,f2,eps
+  Integer:: n,i,error
+  character(len=25)::nombre_archivo,error_msg
+
+  Print*, "Este programa encontrara la soluion a la ecuacion F(x)=x^2-2 mediante el metodo de la Secante."
+  Print*, "Para esto es necesario que me digas el numero máximo de iteraciones que deseas que puedo hacer"
+  Read*, n
+  Print*, "Al final guardare elresultado en un archivo de texto, ¿Que nombre deseas darle?"
+  Read*, nombre_archivo
+  Print *,"Introduce un valor que sera las primera aproximacion"
+  Read *, a
+
+  eps=0.00000001
+  
+  open(11,file=nombre_archivo,status="Unknown",Action="Write",Iostat=error,Iomsg=error_msg)
+  If(error==0)then
+     write(11,*) "i           Xi-1              Xi            f(Xi-1)               f(Xi)"
+     do i=0,n
+        x=a-(f(a)/f2(a))
+        If (abs(x-a)<eps)then
+           Print*, "La raiz se encontró en la iteracion",i
+           Print*, "Abre el archivo",nombre_archivo,"para conocer el resultado"
+           exit
+        End If
+        write(11,10)i,a,x,f(a),f(x)
+        a=x
+     End Do
+
+     If(i>n)then
+        Print*,"No encontre ninguna raiz con las aproximaciones iniciales que introdujiste, por favor introduce otras diferentes "
+     End If
+  Else
+     Print*, error, error_msg
+  End if
+
+   10 Format(I3,X,F18.6,X,F18.6,X,F18.6,X,F18.6) 
+End Program Newton
+
+Function f(x0)
+  real,intent(in)::x0
+  real::f
+  
+  f=x0**2-2
+end Function F
+
+Function f2(x0)
+  real,intent(in)::x0
+  real::f2
+  
+  f=2*x0
+end Function F2
+
